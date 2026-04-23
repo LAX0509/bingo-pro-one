@@ -10,15 +10,48 @@ st.set_page_config(page_title="Bingo Pro Simulación", layout="wide", page_icon=
 
 # --- CSS PROFESIONAL, ADAPTATIVO Y ANIMACIONES ---
 st.markdown("""
+        
     <style>
-    /* Estructura de columnas */
-    [data-testid="column"] { flex: 1 1 18% !important; min-width: 18% !important; }
+    /* --- ESTRUCTURA RESPONSIVA DE COLUMNAS --- */
+    /* En PC: 5 columnas alineadas */
+    [data-testid="column"] { 
+        flex: 1 1 18% !important; 
+        min-width: 18% !important; 
+    }
+
+            html {
+    scroll-behavior: smooth;
+}
+            
+    /* En MÓVIL (Pantallas menores a 768px) */
     @media (max-width: 768px) {
-        [data-testid="column"] { min-width: 19% !important; margin: 0 !important; padding: 2px !important; }
-        .stButton > button { font-size: 10px !important; padding: 0px !important; }
+        /* Forzamos que las columnas no se rompan (importante para el cartón) */
+        div[data-testid="stHorizontalBlock"] {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 2px !important;
+        }
+        
+        [data-testid="column"] { 
+            min-width: 19% !important; 
+            margin: 0 !important; 
+            padding: 0px !important; 
+        }
+
+        /* Botones más pequeños en móvil para que quepan todos */
+        .stButton > button { 
+            font-size: 12px !important; 
+            padding: 2px !important; 
+            height: 35px !important;
+        }
+        
+        /* Ajuste del título del login en móvil */
+        h1 { font-size: 2rem !important; }
+        .balota-header h1 { font-size: 35px !important; }
     }
     
-    /* Animación de Pulso para Nueva Balota */
+    /* --- ANIMACIÓN DE PULSO (Nueva Balota) --- */
     @keyframes pulse-red {
         0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
         50% { transform: scale(1.05); box-shadow: 0 0 20px 10px rgba(220, 38, 38, 0); }
@@ -29,7 +62,7 @@ st.markdown("""
         border: 4px solid #ffffff !important;
     }
 
-    /* Encabezado de Balota */
+    /* --- ENCABEZADO DE BALOTA --- */
     .balota-header {
         text-align: center;
         background: linear-gradient(135deg, #1e3a8a, #dc2626);
@@ -40,14 +73,14 @@ st.markdown("""
         margin-bottom: 20px;
     }
 
-    /* Mejora de Métrica y Sidebar */
+    /* --- MEJORA DE MÉTRICA Y SIDEBAR --- */
     [data-testid="stMetric"] {
         background-color: #ffffff !important;
-        padding: 15px !important;
+        padding: 10px !important;
         border-radius: 10px !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.2) !important;
     }
-    [data-testid="stMetricValue"] { color: #1e3a8a !important; font-weight: bold !important; }
+    [data-testid="stMetricValue"] { color: #1e3a8a !important; font-weight: bold !important; font-size: 1.5rem !important; }
     [data-testid="stMetricLabel"] p { color: #333333 !important; font-weight: 600 !important; }
 
     .sidebar-user-box {
@@ -60,15 +93,17 @@ st.markdown("""
     .user-label { color: #ffd700; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0px; }
     .user-name { color: white; font-size: 1.2rem; font-weight: bold; }
             
-    /* Botones Grandes para el Líder */
+    /* --- BOTONES DEL LÍDER (Adaptativos) --- */
     .stElementContainer:has(button[key*="btn_lider"]) button {
-        height: 60px !important;
-        font-size: 1.1rem !important;
+        height: auto !important;
+        min-height: 50px !important;
+        font-size: 1rem !important;
         font-weight: bold !important;
         border-radius: 12px !important;
         background-color: #1e3a8a !important;
         color: white !important;
         border: 2px solid #ffd700 !important;
+        margin-bottom: 10px !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -323,7 +358,7 @@ else:
 
     for cart in st.session_state.user["cartones"]:
         st.subheader(f"🍀 Cartón: {cart['id']}")
-        cols = st.columns(5)
+        cols = st.columns(5, gap="small") 
         for i, L in enumerate("BINGO"):
             with cols[i]:
                 st.button(L, key=f"h_{cart['id']}_{L}", disabled=True, use_container_width=True)
